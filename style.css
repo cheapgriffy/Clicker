@@ -1,0 +1,309 @@
+body{
+    margin: 0px;
+    font-family: poppins;
+    width: 100vw;
+    height: 100vh;
+}
+
+header{
+    width: 100vw;
+    height: 100vh;
+    background-color: #323437;
+    display: flex;
+}
+
+
+/* upgrade pannel */
+.pannel{
+    width: 40vw;
+    height: 100%;
+
+    position: absolute;
+
+    background-color: #2c2e31;
+    border-top-right-radius: 2em;
+    border-bottom-right-radius: 2em;
+    translate: -25vw 0px;
+
+    transition: all ease 0.2s;
+
+    overflow-y: scroll;
+
+    z-index: 2;
+}
+.pannel:hover{
+    transition: all ease 0.2s;
+    translate: 0vw 0px;
+    
+}
+
+.gameview{
+    width: 100%;
+    height: 100%;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* top left thingy */
+.stats{
+    background-color: #323437;
+    min-height: 10em;
+    width: auto;
+
+    margin: 2em;
+    padding: 2.5em;
+
+    border-radius: 2em;
+}
+
+.stats-label{
+    color: #fafafa;
+    font-size: 2em;
+    margin: 0.2em;
+
+    color: gray;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+}
+
+h4{
+    margin: 0.5em;
+    color: grey;
+}
+
+.upgrade{
+    background-color: #323437;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    min-height: 5em;
+    width: auto;
+
+    margin: 2em;
+    padding: 2.5em;
+
+    border-radius: 2em;
+    color: #fafafa;
+}
+.upgrades{
+    width: 100%;
+    height: 100%;
+}
+.generic-button{
+    background-color: #e1b614;
+    border-radius: 5em;
+    border-style: none;
+    padding: 1em;
+    font-family: poppins;
+    color: #2c2e31;
+    font-weight: 800;
+}
+
+.numbers-label{
+    text-align: center;
+    font-size: 1.2em;
+    color: #FAFAFA;
+    
+}
+
+.loading-bar{
+    display: block;
+
+    width: 60%;
+    height: 2rem;
+    background-color: #2c2e31;
+    box-shadow: inset 0px 10px 10px rgba(0, 0, 0, 0.158);
+    border-radius: 5em;
+
+    overflow: hidden;
+    transition: all ease 0.2s;
+}
+.filling-loading-bar{
+    display: block;
+
+    width: 0%;
+    height: 1em;
+    background-color: #e2b714;
+    box-shadow: inset 10px -10px 10px rgba(0, 0, 0, 0.158);
+    border-radius: 5em;
+
+    transition: all ease 0.5s;
+}
+
+/* Debug serve as a cookie */
+#clickable{
+    display: block;
+
+    width: 10em;
+    height: 10em;
+
+    background-color: blue;
+    
+    animation: rotate-back 0.2s ease forwards;
+}
+#clickable:hover{
+    animation: rotate 0.2s ease forwards;
+}
+
+.occasional_target{
+    display: block;
+
+    width: 5em;
+    height: 5em;
+    border-radius: 5em;
+
+    background-color: yellow;
+    animation: wave ease-in-out 1s infinite;
+    animation-direction: alternate;
+    z-index: 1;
+}
+@keyframes wave {
+    0%{
+        rotate: -2deg;
+    }
+    100%{
+        rotate: 2deg
+    }
+}
+
+
+@keyframes rotate{
+    0%{
+        rotate: 0deg;
+    }
+    100%{
+        rotate: 10deg;
+    }
+}
+@keyframes rotate-back{
+    0%{
+        rotate: 10deg;
+    }
+    100%{
+        rotate: 0deg;
+    }
+}
+
+/* used in number update by js */
+@keyframes blink{
+    0%{
+        color: yellow;
+    }
+    100%{
+        color: #FAFAFA;
+    }
+}
+
+@keyframes xp-rotate{
+    0%{
+        rotate: 0deg;
+    }
+    100%{
+        rotate: -90deg;
+        translate: 6rem;
+    }
+}
+@keyframes xp-rotate-reverse{
+    0%{
+        rotate: 90deg;
+        translate: 30px;
+    }
+    100%{
+        rotate: 0deg;
+    }
+}
+
+#achievement{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    position: absolute;
+
+    opacity: 0%;
+    
+
+    /* hehehhe absolute center div */
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    width: 60%;
+    height: 10rem;
+    
+
+    padding: 2em;
+    
+    z-index: 1;
+}
+
+#achievement-illustration{
+    display: block;
+    width: 10em;
+    height: 10em;
+    border-radius: 100%;
+    z-index: 1;
+    
+    background-size: cover;
+    background-color: #299a0e;
+}
+#achievement-content{
+    display: block;
+    width: 0em;
+    height: 10em;
+    border-radius: 10em;
+
+
+    translate: -25%;
+    background-color: #117d10;
+    overflow: hidden;
+    
+}
+
+@keyframes achievement-expand{
+    0%{
+        width: 0em;
+        opacity: 0%;
+    }
+    20%{
+        width: 35em;
+        opacity: 100%;
+    }
+    80%{
+        width: 35em;
+        opacity: 100%;
+    }
+    100%{
+        width: 0em;
+        opacity: 0%;
+    }
+}
+@keyframes achievement-text{
+    0%{
+        opacity: 0%;
+    }
+    20%{
+        opacity: 100%;
+    }
+    80%{
+        opacity: 100%;
+    }
+    100%{
+        opacity: 0%;
+    }
+}
+
+
+.achievement-text{
+    text-align: center;
+    padding-left: 3em;
+    color: #FAFAFA;
+    font-size: 1em;
+
+}
