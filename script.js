@@ -33,7 +33,7 @@ let upgrade = [
         bought: false,
         multiplier: 1,
         price: 10,
-        effect: function(){state.modifiers.clickPower = state.modifiers.clickPower + this.multiplier}
+        effect: function(){state.modifiers.clickPower++}
     },
     {
         name: "Cliques automatiques",
@@ -157,6 +157,7 @@ function xpWorks(xp_received = 0){
     }
 }
 
+
 function playAchievement(content = "Rien du tout", image = "url(/assets/icons/Achivement_default.png)"){
     elements.achievement.text.innerHTML = content 
     elements.achievement.icon.style.backgroundImage = image
@@ -178,7 +179,6 @@ function randomTargets(coin_modifier = 1){
 }
 
 
-    
 
 /**
  * Create the buy element and shit, register buy and coins management too
@@ -202,11 +202,13 @@ function renderUpgrade(upgrade){
             if(upgrade_price <= state.currency.coins && element.bought == false){
                 state.currency.coins = state.currency.coins - upgrade_price
                 element.bought = true
+
+                element.multiplier++
                 element.effect()
                 render(state)
             } else if(upgrade_price <= state.currency.coins && element.bought == true){
                 state.currency.coins = state.currency.coins - upgrade_price
-                element.multiplier = element.multiplier + 1
+                element.multiplier = ++
                 element.effect()
                 render(state)
             }
@@ -263,8 +265,7 @@ function render(state){
 
 
 function tick(){
-    render(state)
-
+    
     if(upgrade.filter((e) => e.name == "Bouton doré")[0].bought == true){
         upgrade.filter((e) => e.name == "Bouton doré")[0].effect()
     }
@@ -275,4 +276,5 @@ elements.target.addEventListener("click", (e) => {
     clickProcess()
 })
 
-setInterval(() => {tick()}, 250)
+render(state)
+setInterval(() => {tick()}, 300)
