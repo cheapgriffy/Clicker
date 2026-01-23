@@ -40,23 +40,26 @@ let upgrade = [
         description: "Clique automatiquement, ne prend pas en compte le Boost de puissance",
         bought: false,
         multiplier: 0,
+        // minions power
+        power: 1,
         price: 30,
         effect: () => {
             let = current_object = upgrade.filter((e) => e.name == "Cliques automatiques")[0]
-            if(this.bought = true){
-                setInterval((e) =>{
-                    console.log(upgrade[1].multiplier)
-                    clickProcess(1 * upgrade[1].multiplier)
-                    render(state)
-                }, 2000)
 
-                for (let i = 0; i < current_object.multiplier ; i++) {
-                    let element = document.createElement("span")
-                    element.classList.add("autoclick-minions")
-                    
-                    elements.gameview.appendChild(element)
+            for (let i = 0; i < current_object.multiplier ; i++) {
+                let element = document.createElement("span")
+                element.classList.add("autoclick-minions")
+                
+                elements.gameview.appendChild(element)
+ 
+                if(this.bought = true){
+                    setInterval((e) =>{
+                        clickProcess(1 * current_object.power)
+                        render(state)
+                    }, 2000)
                 }
             }
+
         } ,
     },
     { 
@@ -100,6 +103,7 @@ let elements = {
         xp: document.getElementById("xp-label"),
         xp_wrapper: document.querySelector(".loading-bar"),
         xp_fill: document.getElementById("xp-fill") ,
+        speedometer: document.getElementById("speed"),
     },
     target: document.getElementById("clickable"), 
     pannel: document.querySelector(".pannel"),
@@ -112,6 +116,7 @@ let elements = {
         text: document.querySelector(".achievement-text"),
         icon: document.getElementById("achievement-illustration"),
     },
+    
 }
 
 
@@ -141,6 +146,7 @@ function blinkElement(e){
     // ? change animation doesn rerender the element,
     // ? so i call offsetHeigh to trick browser into thinking he need to be rerendered 
     e.offsetHeight;
+    
     e.style.animation = "blink 0.5s ease"
 }
 
@@ -279,7 +285,13 @@ function render(state){
     renderUpgrade(upgrade)
 }
 
-
+function coinSpeedCalculation(){
+    let previous_state = state.currency.coins
+    setTimeout(() => {
+        // calculate differnce, bookmark that for later
+        elements.label.speedometer.innerHTML = `${Math.abs(previous_state - state.currency.coins)}<span style="color:gray; font-size:0.5em">/s</span>`
+    },1000)
+}
 function tick(){
     
     if(upgrade.filter((e) => e.name == "Bouton doré")[0].bought == true){
@@ -294,3 +306,7 @@ elements.target.addEventListener("click", (e) => {
 
 render(state)
 setInterval(() => {tick()}, 300)
+
+setInterval(() => {
+    coinSpeedCalculation()
+}, 1000);
