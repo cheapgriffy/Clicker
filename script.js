@@ -17,7 +17,7 @@ let state = {
     
     achievement:{
         first_level: false,
-        first_coin: false,
+        first_10_coin: false,
     },
     debug:{
         log: "",
@@ -37,7 +37,7 @@ let upgrade = [
     },
     {
         name: "Cliques automatiques",
-        description: "Duuuh c'est dans le titre ducon",
+        description: "Clique automatiquement, ne prend pas en compte le Boost de puissance",
         bought: false,
         multiplier: 0,
         price: 30,
@@ -57,21 +57,21 @@ let upgrade = [
         bought: false,
         multiplier: 0,
         price: 50,
-        effect: (coin_modifier = this.multiplier) => {
-            if(getRandomInt(0, 100) == 1){
+        effect: () => {
+            if(getRandomInt(0, 50) == 1){
                 console.log(`%cGold Target have spawned`, `background-color:orange; color: black; padding:3px; border-radius: 5em;`)
                 let target_element = document.createElement("span")
                 target_element.style.position = "absolute"
                 target_element.classList = "occasional_target"
                 target_element.addEventListener("click", (e) =>{
-                    clickProcess(10 * coin_modifier)
-                    if(state.achievement.first_coin == false){
-                        playAchievement("Aimlab en pls, les vrais il se train sur ça")
-                        state.achievemtn.first_coin = true
-                    }
+                    clickProcess(10 * state.modifiers.clickPower * upgrade.filter((e) => e.name == "Bouton doré")[0].multiplier)
                     target_element.remove()
                 })
                 elements.gameview.appendChild(target_element)
+
+                let disapear_timer = setTimeout(() => {
+                    target_element.remove()
+                }, 5000)
             
                 target_element.style.transform = `translate(
                 ${getRandomInt(elements.gameview.offsetWidth / 3 * -1, elements.gameview.offsetWidth / 3)}px, 
@@ -114,12 +114,11 @@ let elements = {
  */
 function clickProcess(target_value = 1){
     blinkElement(elements.label.score)
-    state.currency.score += target_value * state.modifiers.multiplier
+    state.currency.score += target_value
     blinkElement(elements.label.coins)
-    state.currency.coins += target_value * state.modifiers.clickPower
+    state.currency.coins += target_value
 
-
-    xpWorks(target_value * state.modifiers.clickPower)
+    xpWorks(target_value)
 
     render(state)
 } 
@@ -282,7 +281,7 @@ function tick(){
 
 
 elements.target.addEventListener("click", (e) => {
-    clickProcess()
+    clickProcess(state.modifiers.clickPower)
 })
 
 render(state)

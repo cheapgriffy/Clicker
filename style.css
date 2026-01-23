@@ -58,6 +58,12 @@ header{
     border-radius: 2em;
 }
 
+#xp-bar{
+    position: absolute;
+    top: 5%;
+    width: 30rem;
+}
+
 .stats-label{
     color: #fafafa;
     font-size: 2em;
@@ -73,6 +79,7 @@ header{
 h4{
     margin: 0.5em;
     color: grey;
+    text-align: center;
 }
 
 .upgrade{
