@@ -206,6 +206,16 @@ h4{
         color: #FAFAFA;
     }
 }
+@keyframes blinkbg{
+    0%{
+        background-color: yellow;
+        border-radius: 0em;
+    }
+    100%{
+        background-color: red;
+        border-radius: 1em;
+    }
+}
 
 @keyframes xp-rotate{
     0%{
@@ -324,7 +334,7 @@ h4{
     background-color: red;
     z-index: 1;
 
-    animation: rotate_around_target linear 10s infinite;
+    animation: rotate_around_target linear 10s infinite, blinkbg 2s ease-in-out infinite;
 }
 
 @keyframes rotate_around_target{
