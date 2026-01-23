@@ -31,15 +31,15 @@ let upgrade = [
         name: "Boost de puissance",
         description: "Rend vos clicks plus puissants",
         bought: false,
-        multiplier: 1,
+        multiplier: 0,
         price: 10,
-        effect: function(){state.modifiers.clickPower++}
+        effect: () => {state.modifiers.clickPower++}
     },
     {
         name: "Cliques automatiques",
         description: "Duuuh c'est dans le titre ducon",
         bought: false,
-        multiplier: 1,
+        multiplier: 0,
         price: 30,
         effect: () => {
             if(this.bought = true){
@@ -55,7 +55,7 @@ let upgrade = [
         name: "Bouton doré",
         description: "Un autre bouton aparaitera parfois, il vaut plus",
         bought: false,
-        multiplier: 1,
+        multiplier: 0,
         price: 50,
         effect: (coin_modifier = this.multiplier) => {
             if(getRandomInt(0, 100) == 1){
@@ -192,34 +192,43 @@ function renderUpgrade(upgrade){
         let description = document.createElement("h4")
         let buy_button = document.createElement("button")
 
-        let upgrade_price = element.price * element.multiplier
+        let upgrade_price = 0
 
-        div_template.appendChild(title)
-        div_template.appendChild(description)
-        div_template.appendChild(buy_button)
-
+        // Handle price check for multiply bought element
+        if (element.bought != false){
+            let temp_increment_element = element.multiplier + 1
+            upgrade_price = element.price * temp_increment_element
+        } else if (element.bought == false) {
+            upgrade_price = element.price
+        }
+        
         buy_button.addEventListener("click", (e) => {
             if(upgrade_price <= state.currency.coins && element.bought == false){
                 state.currency.coins = state.currency.coins - upgrade_price
                 element.bought = true
-
+                
                 element.multiplier++
                 element.effect()
                 render(state)
             } else if(upgrade_price <= state.currency.coins && element.bought == true){
                 state.currency.coins = state.currency.coins - upgrade_price
-                element.multiplier = ++
+                element.multiplier++
+                console.log("test")
                 element.effect()
                 render(state)
             }
-
+            
         })
+        
 
+        div_template.appendChild(title)
+        div_template.appendChild(description)
+        div_template.appendChild(buy_button)
         div_template.classList.add("upgrade")
         buy_button.classList.add("generic-button")
 
         title.innerText = element.name
-        description.innerText = element.description
+        description.innerText = `${element.description}, Acheté ${element.multiplier}`
 
         if(element.bought == true){
             buy_button.innerText = `Acheté ${element.multiplier}, ${upgrade_price}`
