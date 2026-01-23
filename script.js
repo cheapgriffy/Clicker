@@ -42,12 +42,20 @@ let upgrade = [
         multiplier: 0,
         price: 30,
         effect: () => {
+            let = current_object = upgrade.filter((e) => e.name == "Cliques automatiques")[0]
             if(this.bought = true){
                 setInterval((e) =>{
                     console.log(upgrade[1].multiplier)
                     clickProcess(1 * upgrade[1].multiplier)
                     render(state)
                 }, 2000)
+
+                for (let i = 0; i < current_object.multiplier ; i++) {
+                    let element = document.createElement("span")
+                    element.classList.add("autoclick-minions")
+                    
+                    elements.gameview.appendChild(element)
+                }
             }
         } ,
     },

@@ -314,3 +314,24 @@ h4{
     font-size: 1em;
 
 }
+
+.autoclick-minions{
+    display: block;
+    position: absolute;
+    width: 1em;
+    height: 1em;
+    transform: translate(10em, 10em);
+    background-color: red;
+    z-index: 1;
+
+    animation: rotate_around_target linear 10s infinite;
+}
+
+@keyframes rotate_around_target{
+    0%{
+        rotate: 0deg;
+    }
+    100%{
+        rotate: 360deg;
+    }
+}
