@@ -1,4 +1,8 @@
 let state = {
+    save_info: {
+        index: 1
+    },
+
     currency: {
         //total clicks
         score: 0,
@@ -110,6 +114,7 @@ let elements = {
     gameview: document.querySelector(".gameview"),
     // the div that contain upgrades output
     upgrades: document.querySelector(".upgrades"),
+    header: document.querySelector("header"),
     achievement:{
         root_element: document.getElementById("achievement"),
         text_area: document.getElementById("achievement-content"),
@@ -186,11 +191,29 @@ function playAchievement(content = "Rien du tout", image = "url(/assets/icons/Ac
     },5000)
 }
 
+function htmlPoppup(content){
+    let poppup = document.createElement("section")
+    poppup.classList.add("absolute-center")
+    poppup.style.height = "80%"
+    poppup.style.width = "80%"
+    poppup.style.zIndex = "3"
+    poppup.style.backgroundColor = "#2c2e31"
+    poppup.style.borderRadius = "4em"
+    poppup.style.padding = "4em"
+    poppup.style.color = "#FAFAFA"
+    poppup.style.border = "solid"
 
-function randomTargets(coin_modifier = 1){
-
+    elements.header.appendChild(poppup)
+    poppup.innerHTML = content
 }
 
+//! Y'know du save and load
+// function updateLocalStorage(userdata){
+//     localStorage.setItem(`userdata ${state.save_info.index}`, JSON.stringify(userdata))
+// }
+// function pullFromSave(index){
+//     localStorage.getItem(`userdata ${index}`, JSON)
+// }
 
 
 /**
@@ -285,6 +308,7 @@ function render(state){
     renderUpgrade(upgrade)
 }
 
+// Handle the coin/s calculation
 function coinSpeedCalculation(){
     let previous_state = state.currency.coins
     setTimeout(() => {
@@ -292,21 +316,37 @@ function coinSpeedCalculation(){
         elements.label.speedometer.innerHTML = `${Math.abs(previous_state - state.currency.coins)}<span style="color:gray; font-size:0.5em">/s</span>`
     },1000)
 }
-function tick(){
-    
+
+//! MAIN TICK FUNCTION Eyecatch
+//! EXECUTE EVERY 0.3 Seconds
+function tick(){    
     if(upgrade.filter((e) => e.name == "Bouton doré")[0].bought == true){
         upgrade.filter((e) => e.name == "Bouton doré")[0].effect()
     }
 }
 
-
+//! MAIN TARGET CLICK
 elements.target.addEventListener("click", (e) => {
     clickProcess(state.modifiers.clickPower)
 })
 
+//! INIT
 render(state)
 setInterval(() => {tick()}, 300)
 
 setInterval(() => {
     coinSpeedCalculation()
 }, 1000);
+
+// debug coin gives
+document.addEventListener("keydown", (e) => {
+    try{
+        if(e.key == "m"){
+            state.currency.coins += parseFloat(prompt("Entre le nombre de piece a give"))
+            render(state)
+        }
+    } catch(error){
+        console.log("Frero entre un nombre comment tu peut foirer ça ")
+        console.log(error)
+    }
+})

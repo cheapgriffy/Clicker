@@ -28,12 +28,13 @@ header{
     transition: all ease 0.2s;
 
     overflow-y: scroll;
-
+    opacity: 50%;
     z-index: 2;
 }
 .pannel:hover{
     transition: all ease 0.2s;
     translate: 0vw 0px;
+    opacity: 100%;
     
 }
 
@@ -44,6 +45,22 @@ header{
     display: flex;
     justify-content: center;
     align-items: center;
+
+    background-image: url(assets/icons/slowerdots.svg);
+    background-size: 10%;
+
+    animation: background-slide linear 40s infinite;
+}
+
+@keyframes background-slide{
+    0%{
+        background-position-x: 0%;
+        background-position-y: 0%;
+    }
+    100%{
+        background-position-x: 100%;
+        background-position-y: 100%;
+    }
 }
 
 /* top left thingy */
@@ -323,6 +340,13 @@ h4{
     color: #FAFAFA;
     font-size: 1em;
 
+}
+
+.absolute-center{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .autoclick-minions{
