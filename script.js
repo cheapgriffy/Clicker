@@ -1,8 +1,4 @@
 let state = {
-    save_info: {
-        index: 1
-    },
-
     currency: {
         //total clicks
         score: 0,
@@ -47,22 +43,23 @@ let upgrade = [
         // minions power
         power: 1,
         price: 30,
-        effect: () => {
+        effect: async () => {
             let = current_object = upgrade.filter((e) => e.name == "Cliques automatiques")[0]
 
-            for (let i = 0; i < current_object.multiplier ; i++) {
-                let element = document.createElement("span")
-                element.classList.add("autoclick-minions")
-                
-                elements.gameview.appendChild(element)
+            let element = document.createElement("span")
+            element.classList.add("autoclick-minions")
+            element.translate = ""
+            //TODO Translate le nouvelle objet par rapport au multiplier
+
+            elements.gameview.appendChild(element)
  
-                if(this.bought = true){
-                    setInterval((e) =>{
-                        clickProcess(1 * current_object.power)
-                        render(state)
-                    }, 2000)
-                }
+            if(this.bought = true){
+                setInterval((e) =>{
+                    clickProcess(1 * current_object.power)
+                    render(state)
+                }, 2000)
             }
+            await sleep(250)
 
         } ,
     },
@@ -115,6 +112,7 @@ let elements = {
     // the div that contain upgrades output
     upgrades: document.querySelector(".upgrades"),
     header: document.querySelector("header"),
+    menu_button: document.getElementById("menu-btn"),
     achievement:{
         root_element: document.getElementById("achievement"),
         text_area: document.getElementById("achievement-content"),
@@ -122,6 +120,8 @@ let elements = {
         icon: document.getElementById("achievement-illustration"),
     },
     
+    notification: document.getElementById("notification"),
+    is_menu_opened: false,
 }
 
 
@@ -141,6 +141,13 @@ function clickProcess(target_value = 1){
     render(state)
 } 
 
+function showNotification(text_content = "Boop"){
+    elements.notification.children[0].innerText = text_content
+    elements.notification.style.translate = '0% 0%'
+    setTimeout(() => {
+        elements.notification.style.translate = "100% 0%"
+    }, 4500)
+}
 
 /**
  * yellow effect on ellement
@@ -154,6 +161,11 @@ function blinkElement(e){
     
     e.style.animation = "blink 0.5s ease"
 }
+
+function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
 
 /**
  * user everytime you wanna add xp, handle leveling system
@@ -172,6 +184,7 @@ function xpWorks(xp_received = 0){
         state.currency.experience = 0
         state.currency.level ++
         blinkElement(elements.label.lvl)
+        showNotification("New level reached")
     }
 }
 
@@ -189,11 +202,19 @@ function playAchievement(content = "Rien du tout", image = "url(/assets/icons/Ac
         elements.achievement.root_element.style.animation = "none"
         elements.achievement.root_element.style.opacity = "0%"
     },5000)
+    updateLocalStorage(state, upgrade)
 }
 
+/**
+ * Make a poppup window
+ * @param {hmtl content that will be displayed} content 
+ * @param {bool that control if in delete mode} remove 
+ */
 function htmlPoppup(content){
     let poppup = document.createElement("section")
     poppup.classList.add("absolute-center")
+    poppup.classList.add("flex-center")
+    poppup.id = "poppup"
     poppup.style.height = "80%"
     poppup.style.width = "80%"
     poppup.style.zIndex = "3"
@@ -202,19 +223,46 @@ function htmlPoppup(content){
     poppup.style.padding = "4em"
     poppup.style.color = "#FAFAFA"
     poppup.style.border = "solid"
-
+    
     elements.header.appendChild(poppup)
     poppup.innerHTML = content
+
+    elements.is_menu_opened = true
 }
 
-//! Y'know du save and load
-// function updateLocalStorage(userdata){
-//     localStorage.setItem(`userdata ${state.save_info.index}`, JSON.stringify(userdata))
-// }
-// function pullFromSave(index){
-//     localStorage.getItem(`userdata ${index}`, JSON)
-// }
+// ! Y'know du save and load
+function updateLocalStorage(user_data, user_upgrades){
+    // pack current variables
+    let unified_save = {
+        user_data,
+        user_upgrades,
+    }
+    localStorage.setItem(`save`, JSON.stringify(unified_save))
+}
+function pullFromSave(apply = false){
+    if (localStorage.getItem(`have_savefile`) == null){
+        updateLocalStorage(state, upgrade)
+        localStorage.setItem(`have_savefile`, true)
+    }
+    let userdata = JSON.parse(localStorage.getItem(`save`))
+    // worst name ever, but too lazy to change
+    state = userdata.user_data
 
+    userdata.user_upgrades.forEach((element, index) => {
+        upgrade[index].bought = element.bought
+        upgrade[index].multiplier = element.multiplier
+        if(element.bought == true && element.multiplier >= 1){
+            for (let i = 0; i <= element.multiplier; i++) {
+                upgrade[index].effect()
+                
+            }
+        }
+    });
+    render(state)
+    renderUpgrade(upgrade)
+    xpWorks()
+    showNotification("Save loaded succesfully")
+}
 
 /**
  * Create the buy element and shit, register buy and coins management too
@@ -246,12 +294,14 @@ function renderUpgrade(upgrade){
                 element.multiplier++
                 element.effect()
                 render(state)
+                updateLocalStorage(state, upgrade)
             } else if(upgrade_price <= state.currency.coins && element.bought == true){
                 state.currency.coins = state.currency.coins - upgrade_price
                 element.multiplier++
                 console.log("test")
                 element.effect()
                 render(state)
+                updateLocalStorage(state, upgrade)
             }
             
         })
@@ -330,13 +380,37 @@ elements.target.addEventListener("click", (e) => {
     clickProcess(state.modifiers.clickPower)
 })
 
+
+// elements.menu_button.addEventListener('click', (e) => {
+//     let poppupHTML = `
+//     <h2>Saves, current save : ${state.save_info.index}</h2>
+//     `
+//     for (let i = 1; i < localStorage.length +1; i++) {
+//         const element = pullFromSave(i);
+//         console.log(element)
+//         poppupHTML += `<div class="upgrade">
+//             <h2>Save index : ${element.save_info.index}</h2>
+//             <h2>Coins : ${element.currency.coins}</h2>
+//             <h2>Level : ${element.currency.level}</h2>
+//             <button class="generic-button" onclick="pullFromSave(${i}, true)">Load<button>
+//         </div>`
+//     }
+
+//     htmlPoppup(poppupHTML)
+// })
+
+
 //! INIT
+pullFromSave()
 render(state)
 setInterval(() => {tick()}, 300)
 
 setInterval(() => {
     coinSpeedCalculation()
+    updateLocalStorage(state, upgrade)
 }, 1000);
+
+setInterval(() => {updateLocalStorage(state, upgrade)}, 60000)
 
 // debug coin gives
 document.addEventListener("keydown", (e) => {
