@@ -259,7 +259,7 @@ function pullFromSave(apply = false){
                 if(count === element.multiplier){
                     clearInterval(delayInterval)
                 }
-            }, 250)
+            }, 75)
         }
     });
     render(state)
@@ -298,13 +298,15 @@ function renderUpgrade(upgrade){
                 element.multiplier++
                 element.effect()
                 render(state)
+                renderUpgrade(upgrade)
+                
                 updateLocalStorage(state, upgrade)
             } else if(upgrade_price <= state.currency.coins && element.bought == true){
                 state.currency.coins = state.currency.coins - upgrade_price
                 element.multiplier++
-                console.log("test")
                 element.effect()
                 render(state)
+                renderUpgrade(upgrade)
                 updateLocalStorage(state, upgrade)
             }
             
@@ -359,7 +361,6 @@ function render(state){
         playAchievement("Premier level ! <br> Le debut d'une longue procrastination")
         state.achievement.first_level = true
     }
-    renderUpgrade(upgrade)
 }
 
 // Handle the coin/s calculation
@@ -385,33 +386,14 @@ elements.target.addEventListener("click", (e) => {
 })
 
 
-// elements.menu_button.addEventListener('click', (e) => {
-//     let poppupHTML = `
-//     <h2>Saves, current save : ${state.save_info.index}</h2>
-//     `
-//     for (let i = 1; i < localStorage.length +1; i++) {
-//         const element = pullFromSave(i);
-//         console.log(element)
-//         poppupHTML += `<div class="upgrade">
-//             <h2>Save index : ${element.save_info.index}</h2>
-//             <h2>Coins : ${element.currency.coins}</h2>
-//             <h2>Level : ${element.currency.level}</h2>
-//             <button class="generic-button" onclick="pullFromSave(${i}, true)">Load<button>
-//         </div>`
-//     }
-
-//     htmlPoppup(poppupHTML)
-// })
-
-
 //! INIT
 pullFromSave()
 render(state)
 setInterval(() => {tick()}, 300)
 
+//! Explicit 
 setInterval(() => {
     coinSpeedCalculation()
-    updateLocalStorage(state, upgrade)
 }, 1000);
 
 setInterval(() => {updateLocalStorage(state, upgrade)}, 60000)
