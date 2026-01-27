@@ -71,13 +71,16 @@ let upgrade = [
         effect: () => {
             if(getRandomInt(0, 50) == 1){
                 console.log(`%cGold Target have spawned`, `background-color:orange; color: black; padding:3px; border-radius: 5em;`)
+
                 let target_element = document.createElement("span")
                 target_element.style.position = "absolute"
                 target_element.classList = "occasional_target"
+
                 target_element.addEventListener("click", (e) =>{
                     clickProcess(10 * state.modifiers.clickPower * upgrade.filter((e) => e.name == "Bouton doré")[0].multiplier)
                     target_element.remove()
                 })
+
                 elements.gameview.appendChild(target_element)
 
                 let disapear_timer = setTimeout(() => {
@@ -125,7 +128,7 @@ let elements = {
 
 
 /**
- * register any modification to clicks
+ * register clicks, or passive clicks
  * target_value can change based on thing that is clicked, like if you get occasional better target
  * @param {provided number by the clicked element} target_value 
  */
@@ -140,6 +143,10 @@ function clickProcess(target_value = 1){
     render(state)
 } 
 
+/**
+ * Bring up the notification pannel on the top right
+ * @param {will be applied to a h3} text_content 
+ */
 function showNotification(text_content = "Boop"){
     elements.notification.children[0].innerText = text_content
     elements.notification.style.translate = '0% 0%'
@@ -150,7 +157,7 @@ function showNotification(text_content = "Boop"){
 
 /**
  * yellow effect on ellement
- * @param {hmtl element} e 
+ * @param {hmtl DOM call} e 
  */
 function blinkElement(e){
     e.style.animation = "none"
@@ -167,7 +174,8 @@ function sleep(ms) {
 
 
 /**
- * user everytime you wanna add xp, handle leveling system
+ * used everytime you wanna add xp, handle leveling system.
+ * Giving zero xp will result in a update of DOM xp related elements
  * @param {xp amont that will be processed} xp_received 
  */
 function xpWorks(xp_received = 0){
@@ -187,7 +195,11 @@ function xpWorks(xp_received = 0){
     }
 }
 
-
+/**
+ * Handle Achievement Poppup animation
+ * @param {text that wil be provided} content 
+ * @param {url to the icon} image 
+ */
 function playAchievement(content = "Rien du tout", image = "url(/assets/icons/Achivement_default.png)"){
     elements.achievement.text.innerHTML = content 
     elements.achievement.icon.style.backgroundImage = image
@@ -229,7 +241,12 @@ function htmlPoppup(content){
     elements.is_menu_opened = true
 }
 
-// ! Y'know du save and load
+
+/**
+ * Wrap save data in a "one object" format
+ * @param {current player state} user_data 
+ * @param {current player upgrades} user_upgrades 
+ */
 function updateLocalStorage(user_data, user_upgrades){
     // pack current variables
     let unified_save = {
@@ -238,7 +255,10 @@ function updateLocalStorage(user_data, user_upgrades){
     }
     localStorage.setItem(`save`, JSON.stringify(unified_save))
 }
-function pullFromSave(apply = false){
+/**
+ * Get data from localstorage, and apply them the states, and do render calls
+ */
+function pullFromSave(){
     if (localStorage.getItem(`have_savefile`) == null){
         updateLocalStorage(state, upgrade)
         localStorage.setItem(`have_savefile`, true)
@@ -269,8 +289,8 @@ function pullFromSave(apply = false){
 }
 
 /**
- * Create the buy element and shit, register buy and coins management too
- * @param {whole hecking array} upgrade 
+ * Create menu elements for buying upgrades, handle buying process, makes upgrades calls
+ * @param {user upgrade object} upgrade 
  */
 function renderUpgrade(upgrade){
     elements.upgrades.innerHTML = ""
@@ -333,10 +353,10 @@ function renderUpgrade(upgrade){
 }
 
 /**
- * give random number between two inputs.
- * @min
- * @max
- * @returns a random int between the two values 
+ * Generate a random number between two choices
+ * @param {cant go lower than} min 
+ * @param {cant go higher than} max 
+ * @returns a random number between the two keys
  */
 function getRandomInt(min, max) {
     min = Math.ceil(min);
@@ -347,7 +367,7 @@ function getRandomInt(min, max) {
 
 
 /**
- * interface with player ui
+ * DOM modification to update UI
  * @param {contain player state} state 
  */
 function render(state){
@@ -363,7 +383,9 @@ function render(state){
     }
 }
 
-// Handle the coin/s calculation
+/**
+ * Handle the Coin per seconds calculation
+ */
 function coinSpeedCalculation(){
     let previous_state = state.currency.coins
     setTimeout(() => {
@@ -386,7 +408,7 @@ elements.target.addEventListener("click", (e) => {
 })
 
 
-//! INIT
+//! INIT system calls
 pullFromSave()
 render(state)
 setInterval(() => {tick()}, 300)
@@ -396,6 +418,7 @@ setInterval(() => {
     coinSpeedCalculation()
 }, 1000);
 
+// Autosaves
 setInterval(() => {updateLocalStorage(state, upgrade)}, 60000)
 
 // debug coin gives
