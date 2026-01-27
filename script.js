@@ -48,9 +48,8 @@ let upgrade = [
 
             let element = document.createElement("span")
             element.classList.add("autoclick-minions")
-            element.translate = ""
-            //TODO Translate le nouvelle objet par rapport au multiplier
-
+            element.style.animationDelay = `${this.multiplier * 10}ms`
+            
             elements.gameview.appendChild(element)
  
             if(this.bought = true){
@@ -252,10 +251,15 @@ function pullFromSave(apply = false){
         upgrade[index].bought = element.bought
         upgrade[index].multiplier = element.multiplier
         if(element.bought == true && element.multiplier >= 1){
-            for (let i = 0; i <= element.multiplier; i++) {
+            // doesnt call them at the same time, for cosmetic purposes
+            let count = 0
+            const delayInterval = setInterval(() => {
                 upgrade[index].effect()
-                
-            }
+                count++
+                if(count === element.multiplier){
+                    clearInterval(delayInterval)
+                }
+            }, 250)
         }
     });
     render(state)
