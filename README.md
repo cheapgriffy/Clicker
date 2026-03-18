@@ -1,4 +1,4 @@
-# 🖱️ Clicker Game | Apprentissage JavaScript
+# 🖱️ Clicker Game | [Exercice Formation]
 
 > **Projet de formation :** Introduction à la manipulation du DOM en JavaScript pur.
 
