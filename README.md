@@ -13,6 +13,7 @@ Le jeu intègre les mécaniques fondamentales d'un "Idle Game" :
 * **Système d'Améliorations (Upgrades) :** Multiplicateurs de clics et automatisation des gains.
 * **Succès (Achievements) :** Système de récompenses basé sur des paliers de progression.
 * **Statistiques en temps réel :** Suivi précis des performances et du score global.
+* **Sauvegarde de l'etat :** Sauvegarde dans localstorage
 
 ## 🛠️ Concepts Techniques Abordés
 
